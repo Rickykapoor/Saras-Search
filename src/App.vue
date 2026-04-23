@@ -39,31 +39,57 @@
         </button>
       </div>
     </header>
+
     <!-- Main content -->
     <main class="app__main container">
       <!-- Search bar -->
       <div class="app__search-bar" :class="{ 'app__search-bar--active': hasSearched }">
         <SearchBar v-model="query" :loading="loading" />
       </div>
+
+      <!-- Loading skeletons -->
+      <Transition name="fade">
+        <div v-if="loading && !results.length" class="app__loader">
+          <LoaderPlaceholder variant="skeleton" :count="3" />
+        </div>
+      </Transition>
+
+      <!-- Error -->
+      <Transition name="fade">
+        <div v-if="error" class="app__error">
+          <p>{{ error }}</p>
+        </div>
+      </Transition>
+
+      <!-- Results -->
+      <SearchResultList :results="results" :loading="loading" :loading-more="loadingMore" :has-more="hasMore"
+        :has-searched="hasSearched" @load-more="loadMore" />
     </main>
 
   </div>
-
-
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import SearchBar from './components/SearchBar.vue'
-const query = ref("")
+import SearchResultList from './components/SearchResultList.vue'
+import LoaderPlaceholder from './components/LoaderPlaceholder.vue'
+import { useSearch } from './composables/useSearch'
+
+const { query, results, loading, loadingMore, error, hasMore, loadMore } = useSearch()
+
+const hasSearched = computed(() => {
+  return results.value.length > 0 || (loading.value && query.value.trim() !== '')
+})
+
 const isDark = ref(document.documentElement.getAttribute('data-theme') === 'dark')
 
 function toggleTheme() {
   isDark.value = !isDark.value
   document.documentElement.setAttribute('data-theme', isDark.value ? 'dark' : 'light')
 }
-
 </script>
+
 <style scoped>
 .app {
   display: flex;
@@ -133,6 +159,22 @@ function toggleTheme() {
 
 .app__search-bar--active {
   padding: var(--space-md) 0 var(--space-lg);
+}
+
+/* Loader / Error */
+.app__loader {
+  padding-bottom: var(--space-md);
+}
+
+.app__error {
+  text-align: center;
+  padding: var(--space-md);
+  font-size: 0.8125rem;
+  color: var(--destructive);
+  background: hsl(0 84.2% 60.2% / 0.08);
+  border: 1px solid hsl(0 84.2% 60.2% / 0.2);
+  border-radius: var(--radius);
+  margin-bottom: var(--space-md);
 }
 
 /* Main */

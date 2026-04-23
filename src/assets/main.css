@@ -1,10 +1,28 @@
 :root {
-  /* Base backgrounds & foregrounds */
+  /* Base backgrounds & foregrounds – shadcn neutral palette */
   --background:          hsl(0 0% 100%);
   --foreground:          hsl(240 10% 3.9%);
 
+  --card:                hsl(0 0% 100%);
+  --card-foreground:     hsl(240 10% 3.9%);
+
+  --popover:             hsl(0 0% 100%);
+  --popover-foreground:  hsl(240 10% 3.9%);
+
+  --primary:             hsl(240 5.9% 10%);
+  --primary-foreground:  hsl(0 0% 98%);
+
+  --secondary:           hsl(240 4.8% 95.9%);
+  --secondary-foreground:hsl(240 5.9% 10%);
+
+  --muted:               hsl(240 4.8% 95.9%);
+  --muted-foreground:    hsl(240 3.8% 46.1%);
+
   --accent:              hsl(240 4.8% 95.9%);
   --accent-foreground:   hsl(240 5.9% 10%);
+
+  --destructive:         hsl(0 84.2% 60.2%);
+  --destructive-foreground: hsl(0 0% 98%);
 
   --border:              hsl(240 5.9% 90%);
   --input:               hsl(240 5.9% 90%);
@@ -34,21 +52,6 @@
   --max-width: 720px;
 }
 
-/* ---------- Utility ---------- */
-.container {
-  width: 100%;
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 var(--space-md);
-}
-
-/* ---------- Focus Visible ---------- */
-:focus-visible {
-  outline: 2px solid var(--ring);
-  outline-offset: 2px;
-  border-radius: calc(var(--radius) - 2px);
-}
-
 /* ---------- CSS Reset ---------- */
 *,
 *::before,
@@ -59,8 +62,33 @@
   border-color: var(--border);
 }
 
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
 
+body {
+  font-family: var(--font-family);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--foreground);
+  background-color: var(--background);
+  transition: background-color var(--transition-base), color var(--transition-base);
+  min-height: 100vh;
+}
 
+a {
+  color: var(--foreground);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--muted-foreground);
+}
+
+a:hover {
+  text-decoration-color: var(--foreground);
+}
 
 button {
   font-family: inherit;
@@ -78,6 +106,48 @@ input {
   color: inherit;
 }
 
+ul, ol {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ---------- Focus Visible ---------- */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: calc(var(--radius) - 2px);
+}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+}
+
+/* ---------- Utility ---------- */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
 /* ---------- Vue Transition Classes ---------- */
 
 /* Fade */
@@ -90,7 +160,67 @@ input {
   opacity: 0;
 }
 
+/* Slide-fade (from bottom) */
+.slide-fade-enter-active {
+  transition: all var(--transition-slow);
+}
+.slide-fade-leave-active {
+  transition: all var(--transition-fast);
+}
+.slide-fade-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
+}
 
+/* Stagger list items */
+.list-enter-active {
+  transition: all var(--transition-slow);
+}
+.list-leave-active {
+  transition: all var(--transition-fast);
+  position: absolute;
+}
+.list-enter-from {
+  opacity: 0;
+  transform: translateY(12px);
+}
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(-16px);
+}
+.list-move {
+  transition: transform var(--transition-slow);
+}
+
+/* Expand */
+.expand-enter-active,
+.expand-leave-active {
+  transition: all var(--transition-base);
+  overflow: hidden;
+}
+.expand-enter-from,
+.expand-leave-to {
+  opacity: 0;
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* ---------- Skeleton Pulse ---------- */
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 1; }
+}
+
+.skeleton {
+  background: var(--muted);
+  border-radius: calc(var(--radius) - 2px);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
 
 /* ---------- Responsive ---------- */
 @media (max-width: 768px) {
