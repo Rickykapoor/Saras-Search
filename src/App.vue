@@ -39,7 +39,13 @@
         </button>
       </div>
     </header>
-
+    <!-- Main content -->
+    <main class="app__main container">
+      <!-- Search bar -->
+      <div class="app__search-bar" :class="{ 'app__search-bar--active': hasSearched }">
+        <SearchBar v-model="query" :loading="loading" />
+      </div>
+    </main>
 
   </div>
 
@@ -48,8 +54,8 @@
 
 <script setup>
 import { ref } from 'vue'
-
-
+import SearchBar from './components/SearchBar.vue'
+const query = ref("")
 const isDark = ref(document.documentElement.getAttribute('data-theme') === 'dark')
 
 function toggleTheme() {
@@ -117,5 +123,21 @@ function toggleTheme() {
 .app__theme-toggle:hover {
   background-color: var(--accent);
   border-color: var(--ring);
+}
+
+/* Search bar */
+.app__search-bar {
+  padding: var(--space-md) 0 var(--space-xl);
+  transition: padding var(--transition-base);
+}
+
+.app__search-bar--active {
+  padding: var(--space-md) 0 var(--space-lg);
+}
+
+/* Main */
+.app__main {
+  flex: 1;
+  padding-bottom: var(--space-3xl);
 }
 </style>
