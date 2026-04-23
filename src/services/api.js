@@ -63,7 +63,8 @@ export async function searchApi(query, page = 1) {
   try {
     await fetch(POSTMAN_ECHO_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({ query, page }),
     })
   } catch {
